@@ -7,17 +7,23 @@ import { useEffect, useReducer } from 'react';
 // on the useEffect hook to load speakers data.
 
 function useSpeakerDataManager() {
-  const [{ isLoading, speakerList, favoriteClickCount, hasErrored, error}, dispatch] = useReducer(
+  const [{ isLoading, speakerList, favoriteClickCount, hasErrored, error,
+    imageRerenderIdentifier}, dispatch] = useReducer(
     speakersReducer, {
     isLoading: true,
     speakerList: [],
     favoriteClickCount: 0,
     hasErrored: false,
     error: null,
+    imageRerenderIdentifier: 0
   });
 
   function incrementFavoriteClickCount(){
     dispatch({type: 'incrementFavoriteClickCount'});
+  }
+
+  function forceImageRerender(){
+    dispatch({type: 'forceImageRerender'});
   }
 
   function toggleSpeakerFavorite(speakerRec) {
@@ -48,6 +54,7 @@ function useSpeakerDataManager() {
     };
   }, []);
   return { isLoading, speakerList, favoriteClickCount, 
-    incrementFavoriteClickCount ,toggleSpeakerFavorite, hasErrored, error, };
+    incrementFavoriteClickCount ,toggleSpeakerFavorite, 
+    hasErrored, error, forceImageRerender, imageRerenderIdentifier,};
 }
 export default useSpeakerDataManager;
