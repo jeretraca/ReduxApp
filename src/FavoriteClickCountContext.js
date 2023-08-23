@@ -7,7 +7,7 @@ export const FavoriteClickCountContext = createContext();
 export const FavoriteClickCountProvider = ({children}) => {
     const {incrementFavoriteClickCount} = useContext(GlobalContext);
     const provider = useMemo(() => {
-        return {incrementFavoriteClickCount }
+        return {incrementFavoriteClickCount };
     },[]);
 
     return(

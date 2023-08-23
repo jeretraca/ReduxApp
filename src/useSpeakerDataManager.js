@@ -7,10 +7,13 @@ import { useEffect, useReducer } from 'react';
 // on the useEffect hook to load speakers data.
 
 function useSpeakerDataManager() {
-  const [{ isLoading, speakerList, favoriteClickCount}, dispatch] = useReducer(speakersReducer, {
+  const [{ isLoading, speakerList, favoriteClickCount, hasErrored, error}, dispatch] = useReducer(
+    speakersReducer, {
     isLoading: true,
     speakerList: [],
     favoriteClickCount: 0,
+    hasErrored: false,
+    error: null,
   });
 
   function incrementFavoriteClickCount(){
@@ -31,14 +34,20 @@ function useSpeakerDataManager() {
   }
   useEffect(() => {
     const fetchData = async function () {
-      let result = await axios.get('/api/speakers');
+      try {
+        let result = await axios.get('/api/speakers');
       dispatch({ type: 'setSpeakerList', data: result.data });
+        
+      } catch (e) {
+        dispatch({type: 'errored', error: e});
+      }
     };
     fetchData();
     return () => {
       console.log('cleanup');
     };
   }, []);
-  return { isLoading, speakerList, favoriteClickCount, incrementFavoriteClickCount ,toggleSpeakerFavorite };
+  return { isLoading, speakerList, favoriteClickCount, 
+    incrementFavoriteClickCount ,toggleSpeakerFavorite, hasErrored, error, };
 }
 export default useSpeakerDataManager;
